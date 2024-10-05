@@ -26,7 +26,7 @@ export class ProfileService {
     return this.profileModel.findByIdAndUpdate(id, updateProfileDto, { new: true }).exec();
   }
 
-  async remove(id: number) {
-    return `This action removes a #${id} profile`;
+  async deleteProfile(id: string): Promise<Profile> {
+    return this.profileModel.findByIdAndDelete(id).exec();
   }
 }

@@ -60,3 +60,10 @@ export type TUser = {
     created_at: Date,
     updated_at: Date,
 }
+
+export type TResponse = {
+    status: number;
+    message: string;
+    data: any;
+    error?: Error;
+}
