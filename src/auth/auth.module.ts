@@ -1,16 +1,24 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
-import { JwtAuthGuard } from './jwt-auth.guard';
+import * as dotenv from 'dotenv';
+import { PassportModule } from '@nestjs/passport';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
+dotenv.config();
 @Module({
     imports: [
-        JwtModule.register({
-            secret: process.env.JWT_ACCESS_SECRET,
-            signOptions: { expiresIn: '15m' },
+        PassportModule,
+        JwtModule.registerAsync({
+            imports: [ConfigModule],
+            inject: [ConfigService],
+            useFactory: async (configService: ConfigService) => ({
+                secret: configService.get<string>('JWT_ACCESS_SECRET'),
+                signOptions: { expiresIn: '15m' },
+            }),
         }),
     ],
-    providers: [JwtStrategy, JwtAuthGuard],
-    exports: [JwtAuthGuard],
+    providers: [JwtStrategy],
+    exports: [JwtModule, PassportModule],
 })
 export class AuthModule {}

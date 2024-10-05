@@ -1,6 +1,6 @@
 import { Type } from 'class-transformer';
 import { IsString, IsNumber, IsArray, IsOptional, IsBoolean, ValidateNested } from 'class-validator';
-import { AddressDto } from './address.dto';
+import { AddressDto, SocialLinkDto, TagDto } from './additional.dto';
 
 export class CreateProfileDto {
     @IsNumber()
@@ -36,22 +36,19 @@ export class CreateProfileDto {
     readonly role: string;
 
     @IsArray()
-    readonly tags: Array<{
-        _id: string;
-        name: string;
-    }>;
+    @IsArray()
+    @ValidateNested({ each: true })
+    @Type(() => TagDto)
+    readonly tags?: TagDto[];
 
     @IsOptional()
     @IsString()
     readonly about?: string;
 
     @IsArray()
-    readonly social_links: Array<{
-        id: number;
-        name: string;
-        link: string;
-        is_exist: boolean;
-    }>;
+    @ValidateNested({ each: true })
+    @Type(() => SocialLinkDto)
+    readonly social_links: SocialLinkDto[];
 
     @IsBoolean()
     readonly is_active: boolean;
