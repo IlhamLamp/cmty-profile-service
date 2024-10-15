@@ -18,15 +18,29 @@ export class ProfileService {
     return this.profileModel.find().exec();
   }
 
-  async getProfileById(id: string): Promise<Profile> {
-    return this.profileModel.findById(id).exec();
+  async getProfileByUserId(user_id: number): Promise<Profile> {
+    return this.profileModel.findOne({ user_id }).exec();
   }
 
-  async updateProfile(id: string, updateProfileDto: UpdateProfileDto): Promise<Profile> {
-    return this.profileModel.findByIdAndUpdate(id, updateProfileDto, { new: true }).exec();
+  async viewProfileByUsername(username: string): Promise<Profile> {
+    return this.profileModel.findOne({ username }).exec();
   }
 
-  async deleteProfile(id: string): Promise<Profile> {
-    return this.profileModel.findByIdAndDelete(id).exec();
+  async updateProfileByUserId(user_id: number, updateProfileDto: UpdateProfileDto): Promise<Profile> {
+    return this.profileModel.findOneAndUpdate({user_id}, updateProfileDto, { new: true }).exec();
+  }
+
+  async deleteProfileByUserId(user_id: number): Promise<Profile> {
+    return this.profileModel.findOneAndDelete({ user_id }).exec();
+  }
+
+  async searchProfilesByName(query: string): Promise<Profile[]> {
+    return this.profileModel.find({
+      $or: [
+        { first_name: new RegExp(query, 'i') },
+        { last_name: new RegExp(query, 'i') },
+        { username: new RegExp(query, 'i') },
+      ],
+    }).exec();
   }
 }

@@ -9,6 +9,7 @@ export class CreateProfileDto {
     @IsString()
     readonly first_name: string;
 
+    @IsOptional()
     @IsString()
     readonly last_name: string;
 
@@ -32,9 +33,11 @@ export class CreateProfileDto {
     @IsString()
     readonly profile_cover?: string;
 
+    @IsOptional()
     @IsString()
     readonly role: string;
 
+    @IsOptional()
     @IsArray()
     @IsArray()
     @ValidateNested({ each: true })
@@ -45,6 +48,7 @@ export class CreateProfileDto {
     @IsString()
     readonly about?: string;
 
+    @IsOptional()
     @IsArray()
     @ValidateNested({ each: true })
     @Type(() => SocialLinkDto)
