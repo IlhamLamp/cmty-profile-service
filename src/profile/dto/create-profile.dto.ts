@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsString, IsNumber, IsArray, IsOptional, IsBoolean, ValidateNested } from 'class-validator';
+import { IsString, IsNumber, IsArray, IsOptional, IsBoolean, ValidateNested, IsDate } from 'class-validator';
 import { AddressDto, SocialLinkDto, TagDto } from './additional.dto';
 
 export class CreateProfileDto {
@@ -19,6 +19,10 @@ export class CreateProfileDto {
     @IsOptional()
     @IsNumber()
     readonly phone?: number;
+
+    @IsOptional()
+    @IsDate()
+    readonly birthday?: Date;
 
     @IsOptional()
     @ValidateNested()

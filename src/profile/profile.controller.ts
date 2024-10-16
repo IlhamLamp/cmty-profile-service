@@ -123,6 +123,7 @@ export class ProfileController {
         data: profile,
       };
     } catch (error) {
+      console.error('Error retrieving profile:', error);
       throw new HttpException({
         status: 'error',
         message: 'An error occurred while retrieving the profile',

@@ -1,51 +1,52 @@
 export type TProfile = {
     _id: string;
     user_id: number;
-    first_name: string,
-    last_name: string,
-    username: string,
-    phone: number,
+    first_name: string;
+    last_name: string;
+    username: string;
+    phone: number;
+    birthday: Date;
     address: {
-        street: string,
-        city: string,
-        state: string,
+        street: string;
+        city: string;
+        state: string;
         zip_code: number
-    },
-    profile_picture: string,
-    profile_cover: string,
-    role: string,
+    };
+    profile_picture: string;
+    profile_cover: string;
+    role: string;
     tags: [
         {
-            _id: string,
-            name: string,
+            _id: string;
+            name: string;
         },
         {
-            _id: string,
-            name: string,
+            _id: string;
+            name: string;
         },
         {
-            _id: string,
-            name: string,
+            _id: string;
+            name: string;
         },
     ]
-    about: string,
+    about: string;
     social_links: [
         {
-            id: number,
-            name: string,
-            link: string,
-            is_exist: boolean,
+            id: number;
+            name: string;
+            link: string;
+            is_exist: boolean;
         },
         {
-            id: number,
-            name: string,
-            link: string,
-            is_exist: boolean,
+            id: number;
+            name: string;
+            link: string;
+            is_exist: boolean;
         }
-    ],
-    is_active: boolean,
-    created_at: Date,
-    updated_at: Date,
+    ];
+    is_active: boolean;
+    created_at: Date;
+    updated_at: Date;
 }
 
 export type TUser = {

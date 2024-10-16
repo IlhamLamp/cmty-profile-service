@@ -20,6 +20,9 @@ export class Profile {
     @Prop({ type: Number })
     phone: number;
 
+    @Prop({ type: Date })
+    birthday: Date;
+    
     @Prop({ type: {
         street: { type: String },
         city: { type: String },
