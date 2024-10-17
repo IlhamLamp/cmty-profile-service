@@ -6,6 +6,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ProfileModule } from './profile/profile.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { RoleModule } from './role/role.module';
 
 dotenv.config();
 
@@ -16,7 +17,8 @@ dotenv.config();
     }),
     MongooseModule.forRoot(process.env.MONGO_CONNECTION_STRING), 
     ProfileModule,
-    AuthModule
+    AuthModule,
+    RoleModule,
   ],
   controllers: [AppController],
   providers: [AppService],

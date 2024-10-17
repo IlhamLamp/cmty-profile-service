@@ -5,24 +5,24 @@ export type ProfileDocument = Profile & Document;
 
 @Schema({ timestamps: true })
 export class Profile {
-    @Prop({ type: Number, required: true, unique: true })
+    @Prop({ type: Number, required: true, unique: true, })
     user_id: number;
 
-    @Prop({ type: String, required: true })
+    @Prop({ type: String, required: true, })
     first_name: string;
 
-    @Prop({ type: String, required: false })
+    @Prop({ type: String, required: false, })
     last_name: string;
 
     @Prop({ type: String, unique: true, required: true })
     username: string;
 
-    @Prop({ type: Number })
+    @Prop({ type: Number, required: false, })
     phone: number;
 
     @Prop({ type: Date })
     birthday: Date;
-    
+
     @Prop({ type: {
         street: { type: String },
         city: { type: String },
@@ -42,7 +42,7 @@ export class Profile {
     @Prop({ type: String })
     profile_cover: string;
 
-    @Prop({ type: String })
+    @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Role', required: false, })
     role: string;
 
     @Prop([

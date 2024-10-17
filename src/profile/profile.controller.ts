@@ -55,14 +55,14 @@ export class ProfileController {
     try {
       const allProfile = await this.profileService.getAllProfile();
       return {
-        status: 201,
+        status: 200,
         message: 'Successfully get all profiles',
         data: allProfile,
       };
     } catch (error) {
       throw new HttpException({
         status: 'error',
-        message: 'An error occurred while creating the profile',
+        message: 'An error occurred while get all profile',
         error: error.message,
         data: null,
       }, HttpStatus.INTERNAL_SERVER_ERROR);
