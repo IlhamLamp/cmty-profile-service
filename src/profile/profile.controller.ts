@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Body, Param, Delete, Put, UseGuards, HttpException, HttpStatus, Request, UnauthorizedException, Query } from '@nestjs/common';
 import { ProfileService } from './profile.service';
 import { CreateProfileDto } from './dto/create-profile.dto';
-import { UpdateProfileDto } from './dto/update-profile.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { TResponse } from 'src/types/type';
 
