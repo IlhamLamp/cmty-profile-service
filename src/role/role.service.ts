@@ -13,14 +13,6 @@ export class RoleService {
         return this.roleModel.find().exec();
     }
 
-    async getRoleByName(name: string): Promise<Role> {
-        const role = await this.roleModel.findOne({ name }).exec();
-        if (!role) {
-            throw new NotFoundException(`Role ${name} not found`);
-        }
-        return role;
-    }
-
     async createRole(createRoleDto: CreateRoleDto): Promise<Role> {
         const createdRole = new this.roleModel(createRoleDto);
         return createdRole.save();

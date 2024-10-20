@@ -43,7 +43,7 @@ export class Profile {
     profile_cover: string;
 
     @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Role', required: false, })
-    role: string;
+    role: MongooseSchema.Types.ObjectId;
 
     @Prop([
     {

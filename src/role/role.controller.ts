@@ -18,7 +18,7 @@ export class RoleController {
         }
     } catch (error) {
         throw new HttpException({
-            status: 'error',
+            status: 500,
             message: 'An error occurred while get all roles',
             error: error.message,
             data: null,
@@ -26,44 +26,18 @@ export class RoleController {
     }
   }
 
-//   @Get(':name')
-//   async getRoleByName(@Param('name') name: string): Promise<TResponse> {
-//     try {
-//         const role = await this.roleService.getRoleByName(name);
-//         if (!role) {
-//             throw new HttpException({
-//               status: 'error',
-//               message: 'role not found',
-//               data: null,
-//             }, HttpStatus.NOT_FOUND);
-//         }
-//         return {
-//             status: 200,
-//             message: 'Role retrieved successfully',
-//             data: role,
-//           };
-//     } catch (error) {
-//         throw new HttpException({
-//             status: 'error',
-//             message: 'An error occurred get roles by name',
-//             error: error.message,
-//             data: null,
-//         }, HttpStatus.INTERNAL_SERVER_ERROR);   
-//     }
-//   }
-
   @Post('create')
   async createRole(@Body() createRoleDto: CreateRoleDto): Promise<TResponse> {
     try {
         const role = await this.roleService.createRole(createRoleDto);
         return {
             status: 201,
-            message: 'Profile created successfully',
+            message: 'Role created successfully',
             data: role,
         };
     } catch (error) {
         throw new HttpException({
-            status: 'error',
+            status: 500,
             message: 'An error occurred while creating the role',
             error: error.message,
             data: null,
@@ -86,7 +60,7 @@ export class RoleController {
         };
     } catch (error) {
         throw new HttpException({
-            status: 'error',
+            status: 500,
             message: 'An error occurred while bulk insert role',
             error: error.message,
             data: null,
@@ -107,7 +81,7 @@ export class RoleController {
         };
     } catch (error) {
         throw new HttpException({
-            status: 'error',
+            status: 500,
             message: 'An error occurred while bulk delete role',
             error: error.message,
             data: null,
@@ -121,18 +95,23 @@ export class RoleController {
     @Query('is_active') isActive?: string,
   ): Promise<TResponse> {
     try {
-        console.log('hit search')
         const activeStatus = isActive ? JSON.parse(isActive) : undefined;
         const roles = await this.roleService.searchRolesByName(name, activeStatus);
-        console.log('hit', roles)
+        if (roles.length == 0) {
+            return {
+                status: 400,
+                message: `Roles ${name} not found`,
+                data: roles,
+            };
+        }
         return {
             status: 200,
             message: 'Roles retrieved successfully',
             data: roles,
-          };
+        };
     } catch (error) {
         throw new HttpException({
-            status: 'error',
+            status: 500,
             message: 'An error occurred while searching for roles',
             error: error.message,
             data: null,

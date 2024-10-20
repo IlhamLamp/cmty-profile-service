@@ -31,7 +31,10 @@ export class ProfileService {
   }
 
   async getProfileByUserId(user_id: number): Promise<Profile> {
-    return this.profileModel.findOne({ user_id }).exec();
+    return this.profileModel
+    .findOne({ user_id })
+    .populate('role')
+    .exec();
   }
 
   async viewProfileByUsername(username: string): Promise<Profile> {

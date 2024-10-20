@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsString, IsNumber, IsArray, IsOptional, IsBoolean, ValidateNested, IsDate } from 'class-validator';
+import { IsString, IsNumber, IsArray, IsOptional, IsBoolean, ValidateNested, IsDate, IsMongoId } from 'class-validator';
 import { AddressDto, SocialLinkDto, TagDto } from './additional.dto';
 import { Types } from 'mongoose';
 
@@ -39,8 +39,8 @@ export class CreateProfileDto {
     readonly profile_cover?: string;
 
     @IsOptional()
-    @IsString()
-    role: string | Types.ObjectId;
+    @IsMongoId()
+    role: Types.ObjectId;
 
     @IsOptional()
     @IsArray()
