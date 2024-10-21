@@ -1,5 +1,13 @@
 import { IsBoolean, IsNumber, IsString } from "class-validator";
 
+export class ExperienceDto {
+    @IsString()
+    readonly value: string;
+
+    @IsString()
+    readonly label: string;
+}
+
 export class AddressDto {
     @IsString()
     readonly street: string;

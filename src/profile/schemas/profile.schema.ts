@@ -45,6 +45,16 @@ export class Profile {
     @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Role', required: false, })
     role: MongooseSchema.Types.ObjectId;
 
+    @Prop({ type: {
+        value: { type: String, required: true },
+        label: { type: String, required: true },
+    }})
+    experience: {
+        value: string;
+        label: string;
+    };
+      
+
     @Prop([
     {
         _id: { type: MongooseSchema.Types.ObjectId, required: true },
