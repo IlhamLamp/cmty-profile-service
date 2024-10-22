@@ -49,7 +49,6 @@ export class RoleService {
         if (typeof isActive !== 'undefined') {
             filter.is_active = isActive;
         }
-        console.log('filter', filter)
         return this.roleModel.find(filter).exec();
     }
 }

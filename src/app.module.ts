@@ -7,6 +7,7 @@ import { ProfileModule } from './profile/profile.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { RoleModule } from './role/role.module';
+import { TagModule } from './tag/tag.module';
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ dotenv.config();
     ProfileModule,
     AuthModule,
     RoleModule,
+    TagModule,
   ],
   controllers: [AppController],
   providers: [AppService],
