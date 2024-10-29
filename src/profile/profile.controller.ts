@@ -3,6 +3,7 @@ import { ProfileService } from './profile.service';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { TResponse } from 'src/types/type';
+import { UpdateProfileDto } from './dto/update-profile.dto';
 
 @Controller('profile')
 export class ProfileController {
@@ -70,37 +71,37 @@ export class ProfileController {
 
   @UseGuards(JwtAuthGuard)
   @Get('search')
-  async searchProfiles(@Query('query') query: string): Promise<TResponse> {
+  async searchProfileByName(
+    @Query('name') name: string,
+    @Query('is_active') isActive?: string,
+  ): Promise<TResponse> {
     try {
-      if (!query) {
-        throw new HttpException({
-          status: 'error',
-          message: 'Query parameter is required',
+        if (name === '') return {
+          status: 400,
+          message: 'Please insert name as query',
           data: null,
-        }, HttpStatus.BAD_REQUEST);
-      }
-
-      const profiles = await this.profileService.searchProfilesByName(query);
-      if (!profiles || profiles.length === 0) {
-        throw new HttpException({
-          status: 'error',
-          message: 'No profiles found',
-          data: null,
-        }, HttpStatus.NOT_FOUND);
-      }
-
-      return {
-        status: 200,
-        message: 'Profiles retrieved successfully',
-        data: profiles,
-      };
+        }
+        const activeStatus = isActive ? JSON.parse(isActive) : undefined;
+        const profiles = await this.profileService.searchProfilesByName(name, activeStatus);
+        if (profiles.length === 0) {
+          return {
+            status: 400,
+            message: `Profiles ${name} not found`,
+            data: profiles,
+          };
+        }
+        return {
+            status: 200,
+            message: 'Profiles retrieved successfully',
+            data: profiles,
+        };
     } catch (error) {
-      throw new HttpException({
-        status: 'error',
-        message: 'An error occurred during profile search',
-        error: error.message,
-        data: null,
-      }, HttpStatus.INTERNAL_SERVER_ERROR);
+        throw new HttpException({
+            status: 500,
+            message: 'An error occurred while searching for profiles',
+            error: error.message,
+            data: null,
+        }, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -159,65 +160,35 @@ export class ProfileController {
     }
   }
 
-  // @UseGuards(JwtAuthGuard)
-  // @Get(':id')
-  // async getProfileByUserId(@Param('id') id: string, @Request() req: any): Promise<TResponse> {
-  //   try {
-  //     const profile = await this.profileService.getProfileByUserId(id);
-  //     if (!profile) {
-  //       throw new HttpException({
-  //         status: 'error',
-  //         message: 'Profile not found',
-  //         data: null,
-  //       }, HttpStatus.NOT_FOUND);
-  //     }
-  //     if (req.user.id !== profile.user_id) {
-  //       throw new UnauthorizedException('You are not authorized to access this profile');
-  //     }
-  //     return {
-  //       status: 200,
-  //       message: 'Profile retrieved successfully',
-  //       data: profile,
-  //     };
-  //   } catch (error) {
-  //     throw new HttpException({
-  //       status: 'error',
-  //       message: 'An error occurred while retrieving the profile',
-  //       error: error.message,
-  //       data: null,
-  //     }, HttpStatus.INTERNAL_SERVER_ERROR);
-  //   }
-  // }
-
-  // @UseGuards(JwtAuthGuard)
-  // @Put(':id')
-  // async updateProfile(@Param('id') id: string, @Request() req: any, @Body() updateProfileDto: UpdateProfileDto): Promise<TResponse> {
-  //   try {
-  //     const updatedProfile = await this.profileService.updateProfile(id, updateProfileDto);
-  //     if (!updatedProfile) {
-  //       throw new HttpException({
-  //         status: 400,
-  //         message: 'Profile not found',
-  //         data: null,
-  //       }, HttpStatus.NOT_FOUND);
-  //     }
-  //     if (req.user.id !== updatedProfile.user_id) {
-  //       throw new UnauthorizedException('You are not authorized to access this profile');
-  //     }
-  //     return {
-  //       status: 201,
-  //       message: 'Profile updated successfully',
-  //       data: updatedProfile,
-  //     };
-  //   } catch (error) {
-  //     throw new HttpException({
-  //       status: 'error',
-  //       message: 'An error occurred while updating the profile',
-  //       error: error.message,
-  //       data: null,
-  //     }, HttpStatus.INTERNAL_SERVER_ERROR);
-  //   }
-  // }
+  @UseGuards(JwtAuthGuard)
+  @Put('update/:user_id')
+  async updateProfileByUserId(@Param('user_id') user_id: number, @Request() req: any, @Body() updateProfileDto: UpdateProfileDto): Promise<TResponse> {
+    try {
+      if (req.user.id !== Number(user_id)) {
+        throw new UnauthorizedException('You are not authorized to access this profile');
+      }
+      const updatedProfile = await this.profileService.updateProfileByUserId(user_id, updateProfileDto);
+      if (!updatedProfile) {
+        throw new HttpException({
+          status: 400,
+          message: 'Profile not found',
+          data: null,
+        }, HttpStatus.NOT_FOUND);
+      }
+      return {
+        status: 201,
+        message: 'Profile updated successfully',
+        data: updatedProfile,
+      };
+    } catch (error) {
+      throw new HttpException({
+        status: 'error',
+        message: 'An error occurred while updating the profile',
+        error: error.message,
+        data: null,
+      }, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
 
   // @UseGuards(JwtAuthGuard)
   // @Delete(':id')

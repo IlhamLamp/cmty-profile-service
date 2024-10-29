@@ -18,15 +18,12 @@ export type TProfile = {
     tags: [
         {
             _id: string;
-            name: string;
         },
         {
             _id: string;
-            name: string;
         },
         {
             _id: string;
-            name: string;
         },
     ]
     about: string;

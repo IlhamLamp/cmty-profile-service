@@ -36,6 +36,9 @@ export class SocialLinkDto {
   
     @IsString()
     name: string;
+
+    @IsString()
+    icon: string;
   
     @IsString()
     link: string;

@@ -1,6 +1,7 @@
 import { Type } from 'class-transformer';
 import { IsString, IsNumber, IsArray, IsOptional, IsBoolean, ValidateNested, IsDate } from 'class-validator';
-import { AddressDto, SocialLinkDto, TagDto } from './additional.dto';
+import { AddressDto, ExperienceDto, SocialLinkDto, TagDto } from './additional.dto';
+import { Types } from 'mongoose';
 
 export class UpdateProfileDto {
     @IsOptional()
@@ -42,7 +43,12 @@ export class UpdateProfileDto {
 
     @IsOptional()
     @IsString()
-    readonly role: string;
+    readonly role: Types.ObjectId;
+
+    @IsOptional()
+    @ValidateNested()
+    @Type(() => ExperienceDto)
+    readonly experience: ExperienceDto;
 
     @IsOptional()
     @IsArray()
@@ -58,7 +64,7 @@ export class UpdateProfileDto {
     @IsArray()
     @ValidateNested({ each: true })
     @Type(() => SocialLinkDto)
-    readonly social_links: SocialLinkDto[];
+    social_links: SocialLinkDto[];
 
     @IsOptional()
     @IsBoolean()

@@ -118,7 +118,7 @@ export class RoleController {
         }, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
-
+}
 //   @Put(':id')
 //   async updateRole(@Param('id') id: string, @Body('name') name: string, @Body('description') description: string) {
 //     return this.roleService.updateRole(id, name, description);
@@ -128,4 +128,3 @@ export class RoleController {
 //   async deleteRole(@Param('id') id: string) {
 //     return this.roleService.deleteRole(id);
 //   }
-}

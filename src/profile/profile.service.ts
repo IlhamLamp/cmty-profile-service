@@ -14,6 +14,11 @@ export class ProfileService {
   ) {}
 
   async createProfile(createProfileDto: CreateProfileDto): Promise<Profile> {
+    const existingProfile = await this.profileModel.findOne({ username: createProfileDto.username });
+    if (existingProfile) {
+      throw new HttpException('Username already exists', HttpStatus.CONFLICT);
+    }
+
     if (!createProfileDto.role) {
       const defaultRole = await this.roleModel.findOne({ name: 'A Learner'});
       if (!defaultRole) {
@@ -31,10 +36,16 @@ export class ProfileService {
   }
 
   async getProfileByUserId(user_id: number): Promise<Profile> {
-    return this.profileModel
-    .findOne({ user_id })
-    .populate('role')
-    .exec();
+    const profile = await this.profileModel.findOne({ user_id }).exec();
+    if (!profile) {
+      throw new HttpException('Profile not found', HttpStatus.NOT_FOUND);
+    }
+    const populatedProfile = await this.profileModel
+      .findOne({ user_id })
+      .populate('role')
+      .populate('tags')
+      .exec();
+    return populatedProfile;
   }
 
   async viewProfileByUsername(username: string): Promise<Profile> {
@@ -42,6 +53,12 @@ export class ProfileService {
   }
 
   async updateProfileByUserId(user_id: number, updateProfileDto: UpdateProfileDto): Promise<Profile> {
+    if (updateProfileDto.social_links) {
+      updateProfileDto.social_links =  updateProfileDto.social_links.map((link) => ({
+        ...link,
+        is_exist: link.link?.trim() !== ""
+      }))
+    }
     return this.profileModel.findOneAndUpdate({user_id}, updateProfileDto, { new: true }).exec();
   }
 
@@ -49,13 +66,18 @@ export class ProfileService {
     return this.profileModel.findOneAndDelete({ user_id }).exec();
   }
 
-  async searchProfilesByName(query: string): Promise<Profile[]> {
-    return this.profileModel.find({
+  async searchProfilesByName(query: string, isActive?: boolean): Promise<Profile[]> {
+    const searchCriteria: any = {
       $or: [
         { first_name: new RegExp(query, 'i') },
         { last_name: new RegExp(query, 'i') },
         { username: new RegExp(query, 'i') },
       ],
-    }).exec();
+    };
+    if (typeof isActive !== 'undefined') {
+      searchCriteria.is_active = isActive;
+    }
+
+    return this.profileModel.find(searchCriteria).exec();
   }
 }
