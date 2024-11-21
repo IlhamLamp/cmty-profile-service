@@ -9,18 +9,21 @@ import { Role, RoleDocument } from 'src/role/schemas/role.schema';
 @Injectable()
 export class ProfileService {
   constructor(
-    @InjectModel(Profile.name) private readonly profileModel: Model<ProfileDocument>,
+    @InjectModel(Profile.name)
+    private readonly profileModel: Model<ProfileDocument>,
     @InjectModel(Role.name) private readonly roleModel: Model<RoleDocument>,
   ) {}
 
   async createProfile(createProfileDto: CreateProfileDto): Promise<Profile> {
-    const existingProfile = await this.profileModel.findOne({ username: createProfileDto.username });
+    const existingProfile = await this.profileModel.findOne({
+      username: createProfileDto.username,
+    });
     if (existingProfile) {
       throw new HttpException('Username already exists', HttpStatus.CONFLICT);
     }
 
     if (!createProfileDto.role) {
-      const defaultRole = await this.roleModel.findOne({ name: 'A Learner'});
+      const defaultRole = await this.roleModel.findOne({ name: 'A Learner' });
       if (!defaultRole) {
         throw new HttpException('Default role not found', HttpStatus.NOT_FOUND);
       }
@@ -52,21 +55,31 @@ export class ProfileService {
     return this.profileModel.findOne({ username }).exec();
   }
 
-  async updateProfileByUserId(user_id: number, updateProfileDto: UpdateProfileDto): Promise<Profile> {
+  async updateProfileByUserId(
+    user_id: number,
+    updateProfileDto: UpdateProfileDto,
+  ): Promise<Profile> {
     if (updateProfileDto.social_links) {
-      updateProfileDto.social_links =  updateProfileDto.social_links.map((link) => ({
-        ...link,
-        is_exist: link.link?.trim() !== ""
-      }))
+      updateProfileDto.social_links = updateProfileDto.social_links.map(
+        (link) => ({
+          ...link,
+          is_exist: link.link?.trim() !== '',
+        }),
+      );
     }
-    return this.profileModel.findOneAndUpdate({user_id}, updateProfileDto, { new: true }).exec();
+    return this.profileModel
+      .findOneAndUpdate({ user_id }, updateProfileDto, { new: true })
+      .exec();
   }
 
   async deleteProfileByUserId(user_id: number): Promise<Profile> {
     return this.profileModel.findOneAndDelete({ user_id }).exec();
   }
 
-  async searchProfilesByName(query: string, isActive?: boolean): Promise<Profile[]> {
+  async searchProfilesByName(
+    query: string,
+    isActive?: boolean,
+  ): Promise<Profile[]> {
     const searchCriteria: any = {
       $or: [
         { first_name: new RegExp(query, 'i') },

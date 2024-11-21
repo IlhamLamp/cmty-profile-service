@@ -1,4 +1,17 @@
-import { Controller, Get, Post, Body, Param, Delete, Put, UseGuards, HttpException, HttpStatus, Request, UnauthorizedException, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Put,
+  UseGuards,
+  HttpException,
+  HttpStatus,
+  Request,
+  UnauthorizedException,
+  Query,
+} from '@nestjs/common';
 import { ProfileService } from './profile.service';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
@@ -10,7 +23,9 @@ export class ProfileController {
   constructor(private readonly profileService: ProfileService) {}
 
   @Post('register')
-  async registerProfile(@Body() createProfileDto: CreateProfileDto): Promise<TResponse> {
+  async registerProfile(
+    @Body() createProfileDto: CreateProfileDto,
+  ): Promise<TResponse> {
     try {
       const profile = await this.profileService.createProfile(createProfileDto);
       return {
@@ -20,18 +35,23 @@ export class ProfileController {
       };
     } catch (error) {
       console.error('Error in registerProfile:', error);
-      throw new HttpException({
-        status: 'error',
-        message: 'An error occurred while creating the profile',
-        error: error.message,
-        data: null,
-      }, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        {
+          status: 'error',
+          message: 'An error occurred while creating the profile',
+          error: error.message,
+          data: null,
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('create')
-  async createProfile(@Body() createProfileDto: CreateProfileDto): Promise<TResponse> {
+  async createProfile(
+    @Body() createProfileDto: CreateProfileDto,
+  ): Promise<TResponse> {
     try {
       const profile = await this.profileService.createProfile(createProfileDto);
       return {
@@ -40,12 +60,15 @@ export class ProfileController {
         data: profile,
       };
     } catch (error) {
-      throw new HttpException({
-        status: 'error',
-        message: 'An error occurred while creating the profile',
-        error: error.message,
-        data: null,
-      }, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        {
+          status: 'error',
+          message: 'An error occurred while creating the profile',
+          error: error.message,
+          data: null,
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -60,12 +83,15 @@ export class ProfileController {
         data: allProfile,
       };
     } catch (error) {
-      throw new HttpException({
-        status: 'error',
-        message: 'An error occurred while get all profile',
-        error: error.message,
-        data: null,
-      }, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        {
+          status: 'error',
+          message: 'An error occurred while get all profile',
+          error: error.message,
+          data: null,
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -76,32 +102,39 @@ export class ProfileController {
     @Query('is_active') isActive?: string,
   ): Promise<TResponse> {
     try {
-        if (name === '') return {
+      if (name === '')
+        return {
           status: 400,
           message: 'Please insert name as query',
           data: null,
-        }
-        const activeStatus = isActive ? JSON.parse(isActive) : undefined;
-        const profiles = await this.profileService.searchProfilesByName(name, activeStatus);
-        if (profiles.length === 0) {
-          return {
-            status: 400,
-            message: `Profiles ${name} not found`,
-            data: profiles,
-          };
-        }
-        return {
-            status: 200,
-            message: 'Profiles retrieved successfully',
-            data: profiles,
         };
+      const activeStatus = isActive ? JSON.parse(isActive) : undefined;
+      const profiles = await this.profileService.searchProfilesByName(
+        name,
+        activeStatus,
+      );
+      if (profiles.length === 0) {
+        return {
+          status: 400,
+          message: `Profiles ${name} not found`,
+          data: profiles,
+        };
+      }
+      return {
+        status: 200,
+        message: 'Profiles retrieved successfully',
+        data: profiles,
+      };
     } catch (error) {
-        throw new HttpException({
-            status: 500,
-            message: 'An error occurred while searching for profiles',
-            error: error.message,
-            data: null,
-        }, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        {
+          status: 500,
+          message: 'An error occurred while searching for profiles',
+          error: error.message,
+          data: null,
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -111,11 +144,14 @@ export class ProfileController {
     try {
       const profile = await this.profileService.getProfileByUserId(req.user.id);
       if (!profile) {
-        throw new HttpException({
-          status: 'error',
-          message: 'Profile not found',
-          data: null,
-        }, HttpStatus.NOT_FOUND);
+        throw new HttpException(
+          {
+            status: 'error',
+            message: 'Profile not found',
+            data: null,
+          },
+          HttpStatus.NOT_FOUND,
+        );
       }
       return {
         status: 200,
@@ -124,26 +160,35 @@ export class ProfileController {
       };
     } catch (error) {
       console.error('Error retrieving profile:', error);
-      throw new HttpException({
-        status: 'error',
-        message: 'An error occurred while retrieving the profile',
-        error: error.message,
-        data: null,
-      }, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        {
+          status: 'error',
+          message: 'An error occurred while retrieving the profile',
+          error: error.message,
+          data: null,
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
-  
+
   @UseGuards(JwtAuthGuard)
   @Get('view/:username')
-  async viewProfileByUsername(@Param('username') username: string, @Request() req: any): Promise<TResponse> {
+  async viewProfileByUsername(
+    @Param('username') username: string,
+    @Request() req: any,
+  ): Promise<TResponse> {
     try {
       const profile = await this.profileService.viewProfileByUsername(username);
       if (!profile) {
-        throw new HttpException({
-          status: 'error',
-          message: 'Profile not found',
-          data: null,
-        }, HttpStatus.NOT_FOUND);
+        throw new HttpException(
+          {
+            status: 'error',
+            message: 'Profile not found',
+            data: null,
+          },
+          HttpStatus.NOT_FOUND,
+        );
       }
       return {
         status: 200,
@@ -151,29 +196,44 @@ export class ProfileController {
         data: profile,
       };
     } catch (error) {
-      throw new HttpException({
-        status: 'error',
-        message: 'An error occurred while retrieving the profile',
-        error: error.message,
-        data: null,
-      }, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        {
+          status: 'error',
+          message: 'An error occurred while retrieving the profile',
+          error: error.message,
+          data: null,
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
   @UseGuards(JwtAuthGuard)
   @Put('update/:user_id')
-  async updateProfileByUserId(@Param('user_id') user_id: number, @Request() req: any, @Body() updateProfileDto: UpdateProfileDto): Promise<TResponse> {
+  async updateProfileByUserId(
+    @Param('user_id') user_id: number,
+    @Request() req: any,
+    @Body() updateProfileDto: UpdateProfileDto,
+  ): Promise<TResponse> {
     try {
       if (req.user.id !== Number(user_id)) {
-        throw new UnauthorizedException('You are not authorized to access this profile');
+        throw new UnauthorizedException(
+          'You are not authorized to access this profile',
+        );
       }
-      const updatedProfile = await this.profileService.updateProfileByUserId(user_id, updateProfileDto);
+      const updatedProfile = await this.profileService.updateProfileByUserId(
+        user_id,
+        updateProfileDto,
+      );
       if (!updatedProfile) {
-        throw new HttpException({
-          status: 400,
-          message: 'Profile not found',
-          data: null,
-        }, HttpStatus.NOT_FOUND);
+        throw new HttpException(
+          {
+            status: 400,
+            message: 'Profile not found',
+            data: null,
+          },
+          HttpStatus.NOT_FOUND,
+        );
       }
       return {
         status: 201,
@@ -181,42 +241,15 @@ export class ProfileController {
         data: updatedProfile,
       };
     } catch (error) {
-      throw new HttpException({
-        status: 'error',
-        message: 'An error occurred while updating the profile',
-        error: error.message,
-        data: null,
-      }, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        {
+          status: 'error',
+          message: 'An error occurred while updating the profile',
+          error: error.message,
+          data: null,
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
-
-  // @UseGuards(JwtAuthGuard)
-  // @Delete(':id')
-  // async deleteProfile(@Param('id') id: string, @Request() req: any): Promise<TResponse> {
-  //   try {
-  //     const deletedProfile = await this.profileService.deleteProfile(id);
-  //     if (!deletedProfile) {
-  //       throw new HttpException({
-  //         status: 400,
-  //         message: 'Profile not found',
-  //         data: null,
-  //       }, HttpStatus.NOT_FOUND);
-  //     }
-  //     if (req.user.id !== deletedProfile.user_id) {
-  //       throw new UnauthorizedException('You are not authorized to access this profile');
-  //     }
-  //     return {
-  //       status: 200,
-  //       message: 'Profile deleted successfully',
-  //       data: deletedProfile,
-  //     };
-  //   } catch (error) {
-  //     throw new HttpException({
-  //       status: 'error',
-  //       message: 'An error occurred while deleting the profile',
-  //       error: error.message,
-  //       data: null,
-  //     }, HttpStatus.INTERNAL_SERVER_ERROR);
-  //   }
-  // }
 }

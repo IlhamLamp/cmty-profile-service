@@ -16,7 +16,7 @@ dotenv.config();
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    MongooseModule.forRoot(process.env.MONGO_CONNECTION_STRING), 
+    MongooseModule.forRoot(process.env.MONGO_CONNECTION_STRING),
     ProfileModule,
     AuthModule,
     RoleModule,

@@ -7,18 +7,18 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 
 dotenv.config();
 @Module({
-    imports: [
-        PassportModule,
-        JwtModule.registerAsync({
-            imports: [ConfigModule],
-            inject: [ConfigService],
-            useFactory: async (configService: ConfigService) => ({
-                secret: configService.get<string>('JWT_ACCESS_SECRET'),
-                signOptions: { expiresIn: '15m' },
-            }),
-        }),
-    ],
-    providers: [JwtStrategy],
-    exports: [JwtModule, PassportModule],
+  imports: [
+    PassportModule,
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_ACCESS_SECRET'),
+        signOptions: { expiresIn: '15m' },
+      }),
+    }),
+  ],
+  providers: [JwtStrategy],
+  exports: [JwtModule, PassportModule],
 })
 export class AuthModule {}
