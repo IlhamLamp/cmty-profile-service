@@ -22,7 +22,7 @@ jobs:
       - name: Check runner connectivity
         run: |
           ping -c 5 google.com
-          if [ $? -ne 0]; then
+          if [ $? -ne 0 ]; then
               echo "Runner connectivity issue. Please check your network configuration."
               exit 1
           fi
@@ -41,6 +41,7 @@ jobs:
           echo "MONGO_CONNECTION_STRING=${{ secrets.MONGO_CONNECTION_STRING }}" >> .env
           echo "JWT_ACCESS_SECRET=${{ secrets.JWT_ACCESS_SECRET }}" >> .env
           echo "JWT_REFRESH_SECRET=${{ secrets.JWT_REFRESH_SECRET }}" >> .env
+          echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> .env
 
       - name: Verify .env file
         run: |
