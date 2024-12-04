@@ -196,9 +196,9 @@ Authorization: Bearer <your-token-here>
    npm install
    ```
 3. Configure the environment variables in `.env` file.
-4. Start the server:
+4. Start the server: dev:
    ```bash
-   npm run start
+   npm run start:dev
    ```
 
 ---
