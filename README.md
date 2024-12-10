@@ -201,17 +201,6 @@ Authorization: Bearer <your-token-here>
    npm run start:dev
    ```
 
----
-
-## Contribution Guidelines
-
-- Fork the repository.
-- Create a feature branch.
-- Commit your changes with clear messages.
-- Submit a pull request.
-
----
-
 ```
 
 ```
