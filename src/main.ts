@@ -4,6 +4,7 @@ import * as dotenv from 'dotenv';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  // DUMMY COMMIT
   app.enableCors({
     origin: process.env.APP_CLIENT,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
